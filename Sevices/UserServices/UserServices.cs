@@ -12,8 +12,29 @@ public class UserServices : IUserServices {
     {
         _context = context;
     }
-    public async Task<Response<User>> DeleteByIdAsync([FromRoute] Guid Id) {
-        throw new NotImplementedException();
+    public async Task<Response<User>> DeleteUserByIdAsync([FromRoute] Guid Id) {
+        var response = new Response<User>();
+
+        try {
+            var userToRemove = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+
+            if (userToRemove != null) {
+                _context.Users.Remove(userToRemove);
+                _context.SaveChanges();
+                response.Models = userToRemove;
+                response.Message = "usuario deletado com sucesso";
+                return response;
+            }
+
+            response.Message = "usuario nao existe na base de dados";
+            response.Sucess = false;
+            return response;
+
+        }catch(Exception ex) {
+            response.Message = ex.Message;
+            response.Sucess = false;
+            return response;
+        }
     }
 
     public async Task<Response<List<User>>> GetAllAsync() {

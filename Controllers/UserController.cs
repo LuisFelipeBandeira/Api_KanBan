@@ -33,7 +33,7 @@ public class UserController : ControllerBase {
         if (response.Sucess) {
             return Ok(response);
         }
-        
+
         return NotFound(response);
     }
 
@@ -48,5 +48,14 @@ public class UserController : ControllerBase {
         return BadRequest(response);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Response<User>>> DeleteUserByIdAsync([FromRoute] Guid id) {
+        var response = await _iUserServices.DeleteUserByIdAsync(id);
 
+        if (response.Sucess) {
+            return Ok(response);
+        }
+
+        return BadRequest(response);
+    }
 }

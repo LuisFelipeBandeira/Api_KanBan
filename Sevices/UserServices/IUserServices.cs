@@ -7,7 +7,7 @@ public interface IUserServices {
 
     Task<Models.Response<Models.UserModels.User>> GetByIdAsync([FromRoute] Guid Id);
 
-    Task<Models.Response<Models.UserModels.User>> DeleteByIdAsync([FromRoute] Guid Id);
+    Task<Models.Response<Models.UserModels.User>> DeleteUserByIdAsync([FromRoute] Guid Id);
 
     Task<Models.Response<Models.UserModels.User>> NewUserAsync([FromBody] Models.UserModels.UserRequests user);
 
