@@ -2,6 +2,7 @@
 using BackEnd_KanBan.Models.UserModels;
 using BackEnd_KanBan.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd_KanBan.Sevices.UserServices;
 
@@ -12,23 +13,24 @@ public class UserServices : IUserServices {
     {
         _context = context;
     }
-    public async Task<Response<User>> DeleteUserByIdAsync([FromRoute] Guid Id) {
+    public async Task<Response<User>> DeleteUserByIdAsync(Guid Id) {
         var response = new Response<User>();
 
         try {
-            var userToRemove = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            var userToRemove = await _context.Users.Where(u => u.Id == Id).FirstOrDefaultAsync();
 
-            if (userToRemove != null) {
-                _context.Users.Remove(userToRemove);
-                _context.SaveChanges();
-                response.Models = userToRemove;
-                response.Message = "usuario deletado com sucesso";
+            if (userToRemove == null) {
+                response.Message = "usuario nao existe na base de dados";
+                response.Sucess = false;
                 return response;
             }
 
-            response.Message = "usuario nao existe na base de dados";
-            response.Sucess = false;
+            _context.Users.Remove(userToRemove);
+            await _context.SaveChangesAsync();
+            response.Models = userToRemove;
+            response.Message = "usuario deletado com sucesso";
             return response;
+
 
         }catch(Exception ex) {
             response.Message = ex.Message;
@@ -41,7 +43,7 @@ public class UserServices : IUserServices {
         var response = new Response<List<User>>();
 
         try {
-            response.Models = _context.Users.ToList();
+            response.Models = await _context.Users.ToListAsync();
 
             if (response.Models.Count == 0) {
                 response.Message = "nenhum usuario foi encontrado";
@@ -55,11 +57,11 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> GetByIdAsync([FromRoute] Guid Id) {
+    public async Task<Response<User>> GetByIdAsync(Guid Id) {
         var response = new Response<User>();
 
         try {
-            response.Models = _context.Users.Where(u => u.Id == Id).FirstOrDefault();
+            response.Models = await _context.Users.Where(u => u.Id == Id).FirstOrDefaultAsync();
 
             if (response.Models == null) {
                 response.Message = "usuario nao encontrado";
@@ -73,14 +75,14 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> NewUserAsync([FromBody] UserRequests user) {
+    public async Task<Response<User>> NewUserAsync(UserRequests user) {
         var response = new Response<User>();
 
         try {
             var newUser = new User(user.Name, user.Email, user.Password);
             
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
 
             response.Models = newUser;
             response.Message = "usuario cadastrado com sucesso";
@@ -92,7 +94,7 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> UpdateByIdAsync([FromRoute] Guid Id) {
+    public async Task<Response<User>> UpdateByIdAsync(Guid Id) {
         throw new NotImplementedException();
     }
 }
