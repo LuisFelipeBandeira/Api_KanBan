@@ -17,7 +17,7 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            var userToRemove = await _context.Users.Where(u => u.Id == Id).FirstOrDefaultAsync();
+            var userToRemove = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
 
             if (userToRemove == null) {
                 response.Message = "usuario nao existe na base de dados";
@@ -27,25 +27,24 @@ public class UserServices : IUserServices {
 
             _context.Users.Remove(userToRemove);
             await _context.SaveChangesAsync();
-            response.Models = userToRemove;
+            response.Body = userToRemove;
             response.Message = "usuario deletado com sucesso";
-            return response;
-
 
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
-            return response;
         }
+
+        return response;
     }
 
     public async Task<Response<List<User>>> GetAllAsync() {
         var response = new Response<List<User>>();
 
         try {
-            response.Models = await _context.Users.ToListAsync();
+            response.Body = await _context.Users.ToListAsync();
 
-            if (response.Models.Count == 0) {
+            if (response.Body.Count == 0) {
                 response.Message = "nenhum usuario foi encontrado";
             }
 
@@ -61,11 +60,15 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            response.Models = await _context.Users.Where(u => u.Id == Id).FirstOrDefaultAsync();
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
 
-            if (response.Models == null) {
+            if (user == null) {
                 response.Message = "usuario nao encontrado";
+                response.Sucess = false;
+                return response;
             }
+
+            response.Body = user;
 
         }catch(Exception ex) {
             response.Message = ex.Message;
@@ -84,7 +87,7 @@ public class UserServices : IUserServices {
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            response.Models = newUser;
+            response.Body = newUser;
             response.Message = "usuario cadastrado com sucesso";
 
         }catch(Exception ex) {
@@ -94,7 +97,55 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> UpdateByIdAsync(Guid Id) {
-        throw new NotImplementedException();
+    public async Task<Response<User>> UpdateByIdAsync(UserRequests user, Guid Id) {
+        var response = new Response<User>();
+
+        try {
+            var userDb = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
+
+            if (userDb == null) {
+                response.Message = "usuario nao encontrado";
+                response.Sucess = false;
+                return response;
+            }
+
+            userDb.Name = user.Name;
+            userDb.Email = user.Email;
+            userDb.Password = user.Password;
+            await _context.SaveChangesAsync();
+            response.Body = userDb;
+            response.Message = "usuario atualizado com sucesso";
+
+        }catch(Exception ex) {
+            response.Message = ex.Message;
+            response.Sucess = false;
+        }
+
+        return response;
+    }
+
+    public async Task<Response<User>> InactivateByIdAsync(Guid Id) {
+        var response = new Response<User>();
+
+        try {
+            var user = await _context.Users.SingleOrDefaultAsync(c => c.Id.Equals(Id));
+
+            if (user == null) {
+                response.Sucess = false;
+                response.Message = "usuario nao encontrado";
+                return response;
+            }
+
+            user.IsActive = false;
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            response.Body = user;
+
+        }catch(Exception ex) {
+            response.Sucess = false;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 }
