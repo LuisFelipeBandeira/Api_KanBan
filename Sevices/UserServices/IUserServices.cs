@@ -1,18 +1,18 @@
-﻿using BackEnd_KanBan.Models.UserModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using BackEnd_KanBan.Models;
+using BackEnd_KanBan.Models.UserModels;
 
 namespace BackEnd_KanBan.Sevices.UserServices;
 
 public interface IUserServices {
-    Task<Models.Response<List<User>>> GetAllAsync();
+    Task<Response<List<User>>> GetAllAsync();
 
-    Task<Models.Response<User>> GetByIdAsync(Guid Id);
+    Task<Response<User>> GetByIdAsync(Guid Id);
 
-    Task<Models.Response<User>> DeleteUserByIdAsync(Guid Id);
+    Task<Response<User>> DeleteByIdAsync(Guid Id);
 
-    Task<Models.Response<User>> NewUserAsync(UserRequests user);
+    Task<Response<User>> NewUserAsync(BoardRequests user);
 
-    Task<Models.Response<User>> UpdateByIdAsync(UserRequests user, Guid Id);
+    Task<Response<User>> UpdateByIdAsync(BoardRequests user, Guid Id);
 
-    Task<Models.Response<User>> InactivateByIdAsync(Guid Id);
+    Task<Response<User>> InactivateByIdAsync(Guid Id);
 }

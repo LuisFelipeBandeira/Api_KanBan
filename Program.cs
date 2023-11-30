@@ -1,3 +1,6 @@
+using BackEnd_KanBan.Models.BoardModels;
+using BackEnd_KanBan.Repository;
+using BackEnd_KanBan.Sevices.BoardServices;
 using BackEnd_KanBan.Sevices.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,8 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSqlServer<BackEnd_KanBan.Repository.ApplicationDbContext>(builder.Configuration.GetConnectionString("KanBan"));
+
+builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetConnectionString("KanBan"));
+
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IBoardServices, BoardServices>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

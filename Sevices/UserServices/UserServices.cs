@@ -13,7 +13,7 @@ public class UserServices : IUserServices {
     {
         _context = context;
     }
-    public async Task<Response<User>> DeleteUserByIdAsync(Guid Id) {
+    public async Task<Response<User>> DeleteByIdAsync(Guid Id) {
         var response = new Response<User>();
 
         try {
@@ -78,7 +78,7 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> NewUserAsync(UserRequests user) {
+    public async Task<Response<User>> NewUserAsync(BoardRequests user) {
         var response = new Response<User>();
 
         try {
@@ -97,7 +97,7 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> UpdateByIdAsync(UserRequests user, Guid Id) {
+    public async Task<Response<User>> UpdateByIdAsync(BoardRequests user, Guid Id) {
         var response = new Response<User>();
 
         try {
@@ -137,8 +137,9 @@ public class UserServices : IUserServices {
             }
 
             user.IsActive = false;
-            user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
+            response.Message = "usuario inativado com sucesso";
             response.Body = user;
 
         }catch(Exception ex) {
