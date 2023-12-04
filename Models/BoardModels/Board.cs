@@ -1,9 +1,10 @@
 ﻿using BackEnd_KanBan.Models.ColumnModels;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace BackEnd_KanBan.Models.BoardModels;
 
 public class Board : BaseModels{
-    public List<Column> Columns { get; set; } = new List<Column>();
+    public List<Column>? Columns { get; set; }
     public bool IsActive { get; set; } = true;
 
     public Board(List<Column>? columns, string name)
@@ -17,6 +18,7 @@ public class Board : BaseModels{
 
         if (columns != null) {
             Columns = columns;
+            Columns.ForEach(c => c.Cards = null);
         } else {
             var defaultColumns = new List<Column>{
                 new Column(Id, "aguardando"),
@@ -25,6 +27,9 @@ public class Board : BaseModels{
             };
             
             Columns = defaultColumns;
+            Columns.ForEach(c => c.Cards = null);
         }
     }
+
+    public Board() {}
 }

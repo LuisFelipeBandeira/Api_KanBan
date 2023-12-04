@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sevices\ColumnServices\" />
     <Folder Include="Sevices\CardServices\" />
   </ItemGroup>
 

@@ -39,7 +39,7 @@ public class UserController : ControllerBase {
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<User>>> NewUserAsync([FromBody] BoardRequests user) {
+    public async Task<ActionResult<Response<User>>> NewUserAsync([FromBody] UserRequests user) {
         var response = await _iUserServices.NewUserAsync(user);
 
         if (response.Sucess) {
@@ -61,7 +61,7 @@ public class UserController : ControllerBase {
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Response<User>>> UpdateByIdAsync([FromRoute] Guid id, [FromBody] BoardRequests user) {
+    public async Task<ActionResult<Response<User>>> UpdateByIdAsync([FromRoute] Guid id, [FromBody] UserRequests user) {
         var response = await _iUserServices.UpdateByIdAsync(user, id);
 
         if (response.Sucess) {
@@ -71,7 +71,7 @@ public class UserController : ControllerBase {
         return BadRequest(response);
     }
 
-    [HttpPut("inactivate/{id}")]
+    [HttpPut("api/users/inactivate/{id}")]
     public async Task<ActionResult<Response<User>>> InactivateByIdAsync([FromRoute] Guid id) {
         var response = await _iUserServices.InactivateByIdAsync(id);
 

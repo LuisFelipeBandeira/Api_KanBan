@@ -18,7 +18,7 @@ public class BoardServices : IBoardServices {
         var response = new Response<Board>();
 
         try {
-            response.Body = await _context.Boards.SingleOrDefaultAsync(b => b.Id == Id);
+            response.Body = await _context.Boards.Include(b => b.Columns).SingleOrDefaultAsync(b => b.Id == Id);
 
             if (response.Body == null) {
                 response.Message = "board informado nao foi encontrado";
@@ -41,7 +41,7 @@ public class BoardServices : IBoardServices {
         var response = new Response<List<Board>>();
 
         try {
-            response.Body = await _context.Boards.ToListAsync();
+            response.Body = await _context.Boards.Include(b => b.Columns).ToListAsync();
 
             if (response.Body.Count == 0) {
                 response.Body = null;
@@ -61,7 +61,7 @@ public class BoardServices : IBoardServices {
         var response = new Response<Board>();
 
         try {
-            response.Body = await _context.Boards.SingleOrDefaultAsync(b => b.Id == id);
+            response.Body = await _context.Boards.Include(b => b.Columns).SingleOrDefaultAsync(b => b.Id == id);
 
             if (response.Body == null) {
                 response.Sucess = false;
@@ -76,12 +76,12 @@ public class BoardServices : IBoardServices {
 
         return response;
     }
-
+  
     public async Task<Response<Board>> InactivateBoardByIdAsync(Guid Id) {
         var response = new Response<Board>();
 
         try {
-            var board = await _context.Boards.SingleOrDefaultAsync(b => b.Id == Id);
+            var board = await _context.Boards.Include(b => b.Columns).SingleOrDefaultAsync(b => b.Id == Id);
 
             if (board == null) {
                 response.Body = null;
@@ -90,6 +90,7 @@ public class BoardServices : IBoardServices {
             }
 
             board.IsActive = false;
+            board.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             response.Message = "board inativado com sucesso";
             response.Body = board;
@@ -108,8 +109,17 @@ public class BoardServices : IBoardServices {
 
         try {
 
-            if (board.Columns.Count > 0) {
-                var newBoard = new Board(board.Columns, board.Name);
+            if (board.Columns != null) {
+                List<Column> columns = new List<Column>();
+
+                var newBoard = new Board(null, board.Name);
+
+                foreach (var column in board.Columns) {
+                    var newColumn = new Column(newBoard.Id, column.Name);
+                    columns.Add(newColumn);
+                }
+
+                newBoard.Columns = columns;
 
                 await _context.Boards.AddAsync(newBoard);
                 await _context.SaveChangesAsync();
@@ -139,7 +149,7 @@ public class BoardServices : IBoardServices {
         var response = new Response<Board>();
 
         try {
-            var boardDb = await _context.Boards.SingleOrDefaultAsync(b => b.Id == Id);
+            var boardDb = await _context.Boards.Include(b => b.Columns).SingleOrDefaultAsync(b => b.Id == Id);
 
             if (boardDb == null) {
                 response.Body = null;
@@ -148,12 +158,21 @@ public class BoardServices : IBoardServices {
                 return response;
             }
             
-            if(board.Columns.Count > 0) {
-                boardDb.Columns = board.Columns;
+            if(board.Columns != null) {
+                List<Column> columns = new List<Column>();
+
+                foreach (var column in board.Columns) {
+                    var newColumn = new Column(Id, column.Name);
+                    columns.Add(newColumn);
+                }
+
+                boardDb.Columns = columns;
             }
 
             boardDb.Name = board.Name;
             boardDb.IsActive = board.IsActive;
+            boardDb.UpdatedAt = DateTime.Now;
+
 
             await _context.SaveChangesAsync();
 

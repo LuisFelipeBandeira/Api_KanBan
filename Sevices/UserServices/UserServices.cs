@@ -78,7 +78,7 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> NewUserAsync(BoardRequests user) {
+    public async Task<Response<User>> NewUserAsync(UserRequests user) {
         var response = new Response<User>();
 
         try {
@@ -97,7 +97,7 @@ public class UserServices : IUserServices {
         return response;
     }
 
-    public async Task<Response<User>> UpdateByIdAsync(BoardRequests user, Guid Id) {
+    public async Task<Response<User>> UpdateByIdAsync(UserRequests user, Guid Id) {
         var response = new Response<User>();
 
         try {
@@ -112,6 +112,7 @@ public class UserServices : IUserServices {
             userDb.Name = user.Name;
             userDb.Email = user.Email;
             userDb.Password = user.Password;
+            userDb.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
             response.Body = userDb;
             response.Message = "usuario atualizado com sucesso";

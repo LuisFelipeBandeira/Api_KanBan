@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AsMwH3y8Rx6fYpztKI9+H9p8KfswcF7c6hNTYuIS3uRSFthlcPhfhwwACkLhkLtfXUs1X3BOdcPJxOitK92ZYw==",
+  "dgSpecHash": "ac/g54ZRX8hRBrdI1TYLKXebrPKO1mJYtSjz7fssQ+LtiVDhCkg6F01MquRzA3mM2sulq4pI6MmgljhIUM+QeQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\QUERO2\\source\\repos\\BackEnd_KanBan\\BackEnd_KanBan.csproj",
+  "projectFilePath": "C:\\Users\\QUERO2\\source\\repos\\BackEnd_KanBan\\BackEnd_KanBan.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\QUERO2\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

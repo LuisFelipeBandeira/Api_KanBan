@@ -10,9 +10,9 @@ public interface IUserServices {
 
     Task<Response<User>> DeleteByIdAsync(Guid Id);
 
-    Task<Response<User>> NewUserAsync(BoardRequests user);
+    Task<Response<User>> NewUserAsync(UserRequests user);
 
-    Task<Response<User>> UpdateByIdAsync(BoardRequests user, Guid Id);
+    Task<Response<User>> UpdateByIdAsync(UserRequests user, Guid Id);
 
     Task<Response<User>> InactivateByIdAsync(Guid Id);
 }
