@@ -1,6 +1,7 @@
 using BackEnd_KanBan.Models.BoardModels;
 using BackEnd_KanBan.Repository;
 using BackEnd_KanBan.Sevices.BoardServices;
+using BackEnd_KanBan.Sevices.ColumnServices;
 using BackEnd_KanBan.Sevices.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetCon
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IBoardServices, BoardServices>();
+builder.Services.AddScoped<IColumnServices, ColumnServices>();
 
 var app = builder.Build();
 
