@@ -18,7 +18,7 @@ public class ColumnServices : IColumnServices {
             var column = await _context.Columns.SingleOrDefaultAsync(c => c.Id == columnId);
 
             if (column == null) {
-                response.Message = "coluna nao encontrada pelo id informado";
+                response.Message = "coluna nao encontrada pelo columnId informado";
                 response.Sucess = false;
                 response.Body = null;
                 return response;
@@ -29,7 +29,7 @@ public class ColumnServices : IColumnServices {
             _context.Remove(column);
             await _context.SaveChangesAsync();
 
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
             response.Body = null;
@@ -38,20 +38,93 @@ public class ColumnServices : IColumnServices {
         return response;
     }
 
-    public Task<Response<Column>> GetColumnAndCardsByBoardAsync(Guid boardId) {
-        throw new NotImplementedException();
+    public async Task<Response<List<Column>>> GetColumnAndCardsByBoardAsync(Guid boardId) {
+        var response = new Response<List<Column>>();
+
+        try {
+            var columns = await _context.Columns.Include(c => c.Cards)
+                .Where(c => c.BoardId == boardId)
+                .ToListAsync();
+
+            if (columns.Count < 1) {
+                response.Message = "colunas nao encontradas pelo boardId informado";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = columns;
+
+        } catch (Exception ex) {
+            response.Message = ex.Message;
+            response.Sucess = false;
+            response.Body = null;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> GetColumnAndCardsByIdAsync(Guid columnId) {
-        throw new NotImplementedException();
+    public async Task<Response<Column>> GetColumnAndCardsByIdAsync(Guid columnId) {
+        var response = new Response<Column>();
+
+        try {
+            var column = await _context.Columns.Include(c => c.Cards)
+                .SingleOrDefaultAsync(c => c.Id == columnId);
+
+            if (column == null) {
+                response.Message = "coluna nao encontrada pelo columnId informado";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = column;
+
+        } catch (Exception ex) {
+            response.Message = ex.Message;
+            response.Sucess = false;
+            response.Body = null;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> GetColumnByBoardAsync(Guid boardId) {
-        throw new NotImplementedException();
+    public async Task<Response<List<Column>>> GetColumnByBoardAsync(Guid boardId) {
+        var response = new Response<List<Column>>();
+
+        try {
+            var columns = await _context.Columns.Where(c => c.BoardId == boardId).ToListAsync();
+
+            if (columns.Count < 1) {
+                response.Message = "colunas nao encontradas pelo boardId informado";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = columns;
+
+        } catch (Exception ex) {
+            response.Message = ex.Message;
+            response.Sucess = false;
+            response.Body = null;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> GetColumnByCardAsync(Guid cardId) {
-        throw new NotImplementedException();
+    public async Task<Response<Column>> GetColumnByCardAsync(Guid cardId) {
+        var response = new Response<Column>();
+
+        try {
+
+        } catch (Exception ex) {
+            response.Sucess = false;
+            response.Body = null;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 
     public Task<Response<Column>> GetColumnByIdAsync(Guid columnId) {
@@ -65,7 +138,7 @@ public class ColumnServices : IColumnServices {
     public Task<Response<Column>> NewColumnAsync(ColumnRequests column, Guid boardId) {
         throw new NotImplementedException();
     }
-     
+
     public Task<Response<Column>> UpdateColumnByIdAsync(ColumnRequests column, Guid Id) {
         throw new NotImplementedException();
     }
