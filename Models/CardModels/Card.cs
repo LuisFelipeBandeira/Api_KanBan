@@ -1,4 +1,6 @@
-﻿namespace BackEnd_KanBan.Models.CardModels;
+﻿using BackEnd_KanBan.Models.ColumnModels;
+
+namespace BackEnd_KanBan.Models.CardModels;
 
 public class Card : BaseModels{
     public Guid ColumnId { get; set; }

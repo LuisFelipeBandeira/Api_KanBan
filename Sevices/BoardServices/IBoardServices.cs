@@ -1,7 +1,6 @@
 ﻿using BackEnd_KanBan.Models;
 using BackEnd_KanBan.Models.BoardModels;
 using BackEnd_KanBan.Models.UserModels;
-using BoardRequests = BackEnd_KanBan.Models.BoardModels.BoardRequests;
 
 namespace BackEnd_KanBan.Sevices.BoardServices;
 

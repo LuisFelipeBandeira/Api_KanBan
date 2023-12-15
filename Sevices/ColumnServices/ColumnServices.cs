@@ -1,4 +1,5 @@
 ﻿using BackEnd_KanBan.Models;
+using BackEnd_KanBan.Models.CardModels;
 using BackEnd_KanBan.Models.ColumnModels;
 using BackEnd_KanBan.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +90,7 @@ public class ColumnServices : IColumnServices {
         return response;
     }
 
-    public async Task<Response<List<Column>>> GetColumnByBoardAsync(Guid boardId) {
+    public async Task<Response<List<Column>>> GetColumnsByBoardAsync(Guid boardId) {
         var response = new Response<List<Column>>();
 
         try {
@@ -117,6 +118,22 @@ public class ColumnServices : IColumnServices {
         var response = new Response<Column>();
 
         try {
+            var card = await _context.Cards.SingleOrDefaultAsync(c => c.Id == cardId);
+            if (card == null) {
+                response.Message = "card nao existente";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            var column = await _context.Columns.SingleOrDefaultAsync(c => c.Cards.Contains(card));
+            if (column == null) {
+                response.Message = "coluna nao encontrada";
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = column;
 
         } catch (Exception ex) {
             response.Sucess = false;
@@ -127,19 +144,141 @@ public class ColumnServices : IColumnServices {
         return response;
     }
 
-    public Task<Response<Column>> GetColumnByIdAsync(Guid columnId) {
-        throw new NotImplementedException();
+    public async Task<Response<Column>> GetColumnByIdAsync(Guid columnId) {
+        var response = new Response<Column>();
+
+        try {
+            var column = await _context.Columns.SingleOrDefaultAsync(c => c.Id == columnId);
+
+            if (column == null) {
+                response.Message = "coluna nao encontrada";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = column;
+
+        } catch (Exception ex) {
+            response.Sucess = false;
+            response.Body = null;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> InactivateColumnByIdAsync(Guid columnId) {
-        throw new NotImplementedException();
+    public async Task<Response<Column>> InactivateColumnByIdAsync(Guid columnId) {
+        var response = new Response<Column>();
+
+        try {
+            var column = await _context.Columns.SingleOrDefaultAsync(c => c.Id == columnId);
+
+            if ( column == null) {
+                response.Message = "coluna nao encontrada";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            column.IsActive = false;
+            await _context.SaveChangesAsync();
+
+            response.Body = column;
+            response.Message = "coluna inativada com sucesso";
+
+        }catch (Exception ex) {
+            response.Sucess = false;
+            response.Body = null;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> NewColumnAsync(ColumnRequests column, Guid boardId) {
-        throw new NotImplementedException();
+    public async Task<Response<List<Column>>> NewColumnsAsync(List<ColumnRequests> columns, Guid boardId) {
+        var response = new Response<List<Column>>();
+
+        try {
+            var board = await _context.Boards.SingleOrDefaultAsync(b => b.Id == boardId);
+
+            if (board == null) {
+                response.Message = "board nao encontrado";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            if (columns == null || columns.Count == 0) {
+                response.Message = "nenhuma coluna foi informada";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            if (columns.Count == 1) {
+                var newColumn = new Column(boardId, columns.FirstOrDefault().Name);
+                board.Columns.Add(newColumn);
+
+                await _context.SaveChangesAsync();
+                response.Body.Add(newColumn);
+                response.Message = "coluna adicionada com sucesso ao board informado";
+
+                return response;
+            }
+
+            var listNewColumns = new List<Column>();
+
+            foreach (var column in columns)
+            {
+                var newColumn = new Column(boardId, column.Name);
+
+                board.Columns.Add(newColumn);
+                listNewColumns.Add(newColumn);
+            }
+
+            await _context.SaveChangesAsync();
+
+            response.Message = "colunas adicionadas com sucesso ao board";
+            response.Body = listNewColumns;
+
+        }
+        catch(Exception ex) {
+            response.Sucess = false;
+            response.Body = null;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 
-    public Task<Response<Column>> UpdateColumnByIdAsync(ColumnRequests column, Guid Id) {
-        throw new NotImplementedException();
+    public async Task<Response<Column>> UpdateColumnByIdAsync(ColumnRequests column, Guid ColumnId) {
+        var response = new Response<Column>();
+
+        try {
+            var columnDb = await _context.Columns.SingleOrDefaultAsync(c => c.Id == ColumnId);
+
+            if (columnDb == null) {
+                response.Sucess = false;
+                response.Body = null;
+                response.Message = "coluna informada nao existe no banco de dados";
+                return response;
+            }
+
+            columnDb.Name = column.Name;
+            columnDb.IsActive = column.IsActive;
+            await _context.SaveChangesAsync();
+
+            response.Message = "coluna atualizada com sucesso";
+            response.Body = columnDb;
+
+        }catch(Exception ex) {
+            response.Sucess = false;
+            response.Body = null;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
+
 }
