@@ -182,6 +182,7 @@ public class ColumnServices : IColumnServices {
             }
 
             column.IsActive = false;
+            column.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             response.Body = column;
@@ -267,6 +268,7 @@ public class ColumnServices : IColumnServices {
 
             columnDb.Name = column.Name;
             columnDb.IsActive = column.IsActive;
+            columnDb.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             response.Message = "coluna atualizada com sucesso";

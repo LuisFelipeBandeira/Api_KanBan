@@ -1,3 +1,4 @@
+using BackEnd_KanBan.Api.Sevices.CardServices;
 using BackEnd_KanBan.Models.BoardModels;
 using BackEnd_KanBan.Repository;
 using BackEnd_KanBan.Sevices.BoardServices;
@@ -17,6 +18,7 @@ builder.Services.AddSqlServer<ApplicationDbContext>(builder.Configuration.GetCon
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IBoardServices, BoardServices>();
 builder.Services.AddScoped<IColumnServices, ColumnServices>();
+builder.Services.AddScoped<ICardServices, CardServices>();
 
 var app = builder.Build();
 

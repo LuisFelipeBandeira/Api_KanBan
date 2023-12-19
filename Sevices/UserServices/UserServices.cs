@@ -1,8 +1,10 @@
-﻿using BackEnd_KanBan.Models;
+﻿using BackEnd_KanBan.Api.Models.UserModels;
+using BackEnd_KanBan.Models;
 using BackEnd_KanBan.Models.UserModels;
 using BackEnd_KanBan.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BackEnd_KanBan.Sevices.UserServices;
 
@@ -17,7 +19,7 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            var userToRemove = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
+            var userToRemove = await _context.Users.SingleOrDefaultAsync(u => u.Id == Id);
 
             if (userToRemove == null) {
                 response.Message = "usuario nao existe na base de dados";
@@ -33,6 +35,7 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
+            response.Body = null;
         }
 
         return response;
@@ -51,6 +54,7 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
+            response.Body = null;
         }
 
         return response;
@@ -60,7 +64,7 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == Id);
 
             if (user == null) {
                 response.Message = "usuario nao encontrado";
@@ -73,6 +77,7 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
+            response.Body = null;
         }
 
         return response;
@@ -82,6 +87,14 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
+            var userDbByemail = await _context.Users.SingleOrDefaultAsync(u => u.Email == user.Email);
+            if(userDbByemail != null) {
+                response.Message = "ja existe um usuario cadatrado com o email informado";
+                response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
             var newUser = new User(user.Name, user.Email, user.Password);
             
             await _context.Users.AddAsync(newUser);
@@ -93,6 +106,7 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
+            response.Body = null;
         }
         return response;
     }
@@ -101,11 +115,21 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            var userDb = await _context.Users.SingleOrDefaultAsync(u => u.Id.Equals(Id));
+            var userDb = await _context.Users.SingleOrDefaultAsync(u => u.Id == Id);
 
             if (userDb == null) {
                 response.Message = "usuario nao encontrado";
                 response.Sucess = false;
+                response.Body = null;
+                return response;
+            }
+
+            var userDbByemail = await _context.Users.SingleOrDefaultAsync(u => u.Email == user.Email);
+                
+            if (userDbByemail != null && userDb.Id != userDbByemail.Id) {
+                response.Message = "ja existe um usuario cadatrado com o email informado";
+                response.Sucess = false;
+                response.Body = null;
                 return response;
             }
 
@@ -120,6 +144,7 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Message = ex.Message;
             response.Sucess = false;
+            response.Body = null;
         }
 
         return response;
@@ -129,7 +154,7 @@ public class UserServices : IUserServices {
         var response = new Response<User>();
 
         try {
-            var user = await _context.Users.SingleOrDefaultAsync(c => c.Id.Equals(Id));
+            var user = await _context.Users.SingleOrDefaultAsync(c => c.Id == Id);
 
             if (user == null) {
                 response.Sucess = false;
@@ -146,6 +171,38 @@ public class UserServices : IUserServices {
         }catch(Exception ex) {
             response.Sucess = false;
             response.Message = ex.Message;
+            response.Body = null;
+        }
+
+        return response;
+    }
+
+    public async Task<Response<string>> UserLoginAsync(UserLogin loginFields) {
+        var response = new Response<string>();
+
+        try {
+            var userDbByEmail = await _context.Users.SingleOrDefaultAsync(u => u.Email.ToLower() == loginFields.email.ToLower());
+            if (userDbByEmail == null) {
+                response.Sucess = false;
+                response.Message = "email informado nao foi encontrado no banco de dados";
+                response.Body = null;
+                return response;
+            }
+
+            if (userDbByEmail.Password !=  loginFields.password) {
+                response.Sucess = false;
+                response.Message = "senha incorreta";
+                response.Body = null;
+                return response;
+            }
+
+            response.Body = "asdonibasifgbwsfndosodfbnsdisbdfobsdfibsdfpobsdfhw78943gf839fb3498fb34";
+            response.Message = "login realizado com sucesso";
+
+        } catch(Exception ex) {
+            response.Sucess = false;
+            response.Message = ex.Message;
+            response.Body = null;
         }
 
         return response;
