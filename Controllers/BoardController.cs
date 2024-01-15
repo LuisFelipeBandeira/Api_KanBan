@@ -1,6 +1,7 @@
 ﻿using BackEnd_KanBan.Models;
 using BackEnd_KanBan.Models.BoardModels;
 using BackEnd_KanBan.Sevices.BoardServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -16,6 +17,7 @@ public class BoardController : ControllerBase {
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<Response<List<Board>>>> GetAllBoardsAsync() {
         var response = await _boardServices.GetAllBoardsAsync();
 
@@ -27,6 +29,7 @@ public class BoardController : ControllerBase {
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<Response<Board>>> GetBoardByIdAsync([FromRoute] Guid id) {
         var response = await _boardServices.GetBoardByIdAsync(id);
 
@@ -38,6 +41,7 @@ public class BoardController : ControllerBase {
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Response<Board>>> NewBoardsAsync([FromBody] BoardRequests board) {
         var response = await _boardServices.NewBoardsAsync(board);
 
@@ -50,6 +54,7 @@ public class BoardController : ControllerBase {
 
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ActionResult<Response<Board>>> DeleteBoardByIdAsync([FromRoute] Guid id) {
         var response = await _boardServices.DeleteBoardByIdAsync(id);
 
@@ -61,6 +66,7 @@ public class BoardController : ControllerBase {
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<ActionResult<Response<Board>>> UpdateBoardByIdAsync([FromRoute] Guid id, [FromBody] BoardRequests board) {
         var response = await _boardServices.UpdateBoardByIdAsync(board, id);
 
@@ -72,6 +78,7 @@ public class BoardController : ControllerBase {
     }
 
     [HttpPut("api/boards/inactivate/{id}")]
+    [Authorize]
     public async Task<ActionResult<Response<Board>>> InactivateBoardByIdAsync([FromRoute] Guid id) {
         var response = await _boardServices.InactivateBoardByIdAsync(id);
         

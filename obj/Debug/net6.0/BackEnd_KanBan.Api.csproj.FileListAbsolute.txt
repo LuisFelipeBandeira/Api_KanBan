@@ -85,3 +85,4 @@ C:\Users\QUERO2\source\repos\BackEnd_KanBan\obj\Debug\net6.0\refint\BackEnd_KanB
 C:\Users\QUERO2\source\repos\BackEnd_KanBan\obj\Debug\net6.0\BackEnd_KanBan.Api.pdb
 C:\Users\QUERO2\source\repos\BackEnd_KanBan\obj\Debug\net6.0\BackEnd_KanBan.Api.genruntimeconfig.cache
 C:\Users\QUERO2\source\repos\BackEnd_KanBan\obj\Debug\net6.0\ref\BackEnd_KanBan.Api.dll
+C:\Users\QUERO2\source\repos\BackEnd_KanBan\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

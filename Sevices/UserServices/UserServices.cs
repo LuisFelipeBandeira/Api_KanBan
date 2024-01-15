@@ -1,4 +1,5 @@
 ﻿using BackEnd_KanBan.Api.Models.UserModels;
+using BackEnd_KanBan.Api.Sevices.AuthServices;
 using BackEnd_KanBan.Models;
 using BackEnd_KanBan.Models.UserModels;
 using BackEnd_KanBan.Repository;
@@ -11,8 +12,10 @@ namespace BackEnd_KanBan.Sevices.UserServices;
 public class UserServices : IUserServices {
 
     private readonly ApplicationDbContext _context;
-    public UserServices(ApplicationDbContext context)
+    private readonly ITokenServices _tokenServies;
+    public UserServices(ApplicationDbContext context, ITokenServices tokenServices)
     {
+        _tokenServies = tokenServices;
         _context = context;
     }
     public async Task<Response<User>> DeleteByIdAsync(Guid Id) {
@@ -196,7 +199,15 @@ public class UserServices : IUserServices {
                 return response;
             }
 
-            response.Body = "asdonibasifgbwsfndosodfbnsdisbdfobsdfibsdfpobsdfhw78943gf839fb3498fb34";
+            string token = await _tokenServies.GetTokenAsync(userDbByEmail);
+            if (string.IsNullOrEmpty(token)) {
+                response.Sucess = false;
+                response.Message = "erro para gerar token";
+                response.Body = null;
+                return response;
+            }
+            
+            response.Body = token;
             response.Message = "login realizado com sucesso";
 
         } catch(Exception ex) {

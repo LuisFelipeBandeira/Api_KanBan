@@ -1,6 +1,7 @@
 ﻿using BackEnd_KanBan.Models;
 using BackEnd_KanBan.Models.ColumnModels;
 using BackEnd_KanBan.Sevices.ColumnServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ public class ColumnController : ControllerBase {
     }
 
     [HttpGet("bycolumnid/{columnId}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> GetColumnByIdAsync([FromRoute] Guid columnId) {
         var response = await _columnServices.GetColumnByIdAsync(columnId);
 
@@ -28,6 +30,7 @@ public class ColumnController : ControllerBase {
     }
 
     [HttpGet("bycolumnId/withcards/{columnId}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> GetColumnAndCardsByIdAsync([FromRoute] Guid columnId) {
         var response = await _columnServices.GetColumnAndCardsByIdAsync(columnId);
 
@@ -38,7 +41,8 @@ public class ColumnController : ControllerBase {
         return BadRequest(response);
     }
 
-    [HttpGet("byboardid/{boardId}")] 
+    [HttpGet("byboardid/{boardId}")]
+    [Authorize]
     public async Task<ActionResult<Response<List<Column>>>> GetColumnByBoardAsync([FromRoute] Guid boardId) {
         var response = await _columnServices.GetColumnsByBoardAsync(boardId);
 
@@ -50,6 +54,7 @@ public class ColumnController : ControllerBase {
     }
 
     [HttpGet("byboardId/withcards/{boardId}")]
+    [Authorize]
     public async Task<ActionResult<Response<List<Column>>>> GetColumnAndCardsByBoardAsync([FromRoute] Guid boardId) {
         var response = await _columnServices.GetColumnAndCardsByBoardAsync(boardId);
 
@@ -62,6 +67,7 @@ public class ColumnController : ControllerBase {
 
 
     [HttpGet("bycardid/{cardid}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> GetColumnByCardAsync([FromRoute] Guid cardid) {
         var response = await _columnServices.GetColumnByCardAsync(cardid);
 
@@ -74,6 +80,7 @@ public class ColumnController : ControllerBase {
     }
 
     [HttpPut("{columnId}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> UpdateColumnByIdAsync([FromBody] ColumnRequests column, [FromRoute] Guid columnId) {
         var response = await _columnServices.UpdateColumnByIdAsync(column, columnId);
 
@@ -87,6 +94,7 @@ public class ColumnController : ControllerBase {
 
 
     [HttpPut("inactivate/{columnId}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> InactivateColumnByIdAsync([FromRoute] Guid columnId) {
         var response = await _columnServices.InactivateColumnByIdAsync(columnId);
 
@@ -100,6 +108,7 @@ public class ColumnController : ControllerBase {
 
 
     [HttpPost("{boardId}")]
+    [Authorize]
     public async Task<ActionResult<Response<List<Column>>>> NewColumnsAsync([FromBody] List<ColumnRequests> column, [FromRoute] Guid boardId) {
         var response = await _columnServices.NewColumnsAsync(column, boardId);
 
@@ -112,6 +121,7 @@ public class ColumnController : ControllerBase {
     }
 
     [HttpDelete("{columnId}")]
+    [Authorize]
     public async Task<ActionResult<Response<Column>>> DeleteColumnAsync([FromRoute] Guid columnId) {
         var response = await _columnServices.DeleteColumnAsync(columnId);
 

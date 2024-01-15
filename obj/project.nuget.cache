@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "ac/g54ZRX8hRBrdI1TYLKXebrPKO1mJYtSjz7fssQ+LtiVDhCkg6F01MquRzA3mM2sulq4pI6MmgljhIUM+QeQ==",
+  "dgSpecHash": "tayRDT9UNQ11YGXTGQ8axappXI4BKxqupeP5WnwvHHJxtW9yQgMnD8VXdCqiGSmt4PgheBaSmAhOejw4kS6YAg==",
   "success": true,
   "projectFilePath": "C:\\Users\\QUERO2\\source\\repos\\BackEnd_KanBan\\BackEnd_KanBan.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\QUERO2\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\QUERO2\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.23\\microsoft.aspnetcore.authentication.jwtbearer.6.0.23.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\QUERO2\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.1\\microsoft.data.sqlclient.5.1.1.nupkg.sha512",
